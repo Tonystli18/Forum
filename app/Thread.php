@@ -5,6 +5,7 @@ namespace App;
 use App\Traits\Favoritable;
 use App\Filters\ThreadFilters;
 use App\Traits\RecordsActivity;
+use App\Events\ThreadHasNewReply;
 use App\Notifications\ThreadWasUpdated;
 use Illuminate\Database\Eloquent\Model;
 
@@ -71,15 +72,19 @@ class Thread extends Model
     {
         $reply = $this->replies()->create($reply);
 
-        // Prepare notifications for all subscribers
-        $this->subscriptions
-            ->where('user_id', '!=', $reply->user_id)
-            ->each->notify($reply); // same as below code
-        // ->each(function($sub) use($reply) {
-        //     $sub->user->notify(new ThreadWasUpdated($this, $reply));
-        // });
+        $this->notifySubscribers($reply);
+
+        // event(new ThreadHasNewReply($this, $reply));
 
         return $reply;
+    }
+
+    public function notifySubscribers($reply)
+    {
+        $this->subscriptions
+            ->where('user_id', '!=', $reply->user_id)
+            ->each
+            ->notify($reply);
     }
 
     public function channel()
