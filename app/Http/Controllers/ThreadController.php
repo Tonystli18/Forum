@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\User;
 use App\Thread;
 use App\Channel;
-use App\Filters\ThreadFilters;
 use Illuminate\Http\Request;
+use App\Filters\ThreadFilters;
 use Illuminate\Validation\Rules\Exists;
 
 class ThreadController extends Controller
@@ -65,9 +65,9 @@ class ThreadController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'title' => 'required',
-            'body' => 'required',
+        request()->validate([
+            'title' => 'required | spamfree',
+            'body' => 'required | spamfree',
             'channel_id' => 'required|exists:channels,id'
         ]);
 
@@ -90,6 +90,10 @@ class ThreadController extends Controller
      */
     public function show($channel, Thread $thread)
     {
+        if(auth()->check()) {
+            auth()->user()->read($thread);
+        }
+
         // return Thread::withCount('replies')->find(55);
         // return $thread->getRepliesCount();
 
