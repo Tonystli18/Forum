@@ -59973,7 +59973,7 @@ var render = function() {
       _c("div", { staticClass: "level" }, [
         _c("h6", { staticClass: "flex" }, [
           _c("a", {
-            attrs: { href: "/profiles/" + _vm.data.owner.name },
+            attrs: { href: "/profiles/" + _vm.data.owner.id },
             domProps: { textContent: _vm._s(_vm.data.owner.name) }
           }),
           _vm._v("\n        said "),

@@ -2,8 +2,11 @@
 
 namespace App\Policies;
 
-use App\Reply;
 use App\User;
+use App\Reply;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Auth\Access\Response;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class ReplyPolicy
@@ -41,7 +44,10 @@ class ReplyPolicy
      */
     public function create(User $user)
     {
-        //
+        $lastReply = $user->fresh()->lastReply;
+
+        return  is_null($lastReply) || ! $lastReply->wasJustPublished();
+
     }
 
     /**

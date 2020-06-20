@@ -5,12 +5,15 @@ namespace App\Http\Controllers;
 use App\Reply;
 use App\Thread;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
+use Psy\CodeCleaner\CalledClassPass;
 
 class ReplyController extends Controller
 {
     public function __construct()
     {
         $this->middleware('auth', ['except' => 'index']);
+
     }
     /**
      * Display a listing of the resource.
@@ -40,7 +43,15 @@ class ReplyController extends Controller
      */
     public function store($channelId, Thread $thread)
     {
+        if (Gate::denies('create', new Reply)) {
+            return response(
+                'You are posting too frequently. Please take a break. :)', 429
+            );
+        }
+
         try {
+
+            // $this->authorize('create', Reply::class);
             request()->validate(['body' => 'required | spamfree']);
         
             $reply = $thread->addReply([

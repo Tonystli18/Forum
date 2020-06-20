@@ -4,6 +4,7 @@ namespace App;
 
 use App\Traits\Favoritable;
 use App\Traits\RecordsActivity;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Reply extends Model
@@ -40,6 +41,12 @@ class Reply extends Model
     public function thread()
     {
         return $this->belongsTo(thread::class, 'thread_id');
+    }
+
+    public function wasJustPublished()
+    {
+        return $this->created_at->gt(Carbon::now()->subMinute());
+        // return $this->created_at->gt(Carbon::now()->subRealMinute());
     }
 
     public function path()
