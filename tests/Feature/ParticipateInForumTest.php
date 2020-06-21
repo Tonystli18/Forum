@@ -47,13 +47,13 @@ class ParticipateInForumTest extends TestCase
      */
     public function a_reply_requires_a_body()
     {
-        $this->withoutExceptionHandling()->signedIn();
+        $this->signedIn();
 
         $thread = create('App\Thread');
 
         $reply = make('App\Reply', ['body' => null]);
         
-        $this->post($thread->path().'/replies', $reply->toArray())
+        $this->json('post', $thread->path().'/replies', $reply->toArray())
             ->assertStatus(422);
     }
 
@@ -115,7 +115,7 @@ class ParticipateInForumTest extends TestCase
     /** @test */
     public function replies_that_contain_spam_may_not_be_created()
     {
-        $this->withoutExceptionHandling();
+        // $this->withoutExceptionHandling();
         
         $this->signedIn();
 
@@ -125,8 +125,8 @@ class ParticipateInForumTest extends TestCase
             'body'=> 'Yahoo Customer Support.'
         ]);
 
-        $this->post($thread->path().'/replies', $reply->toArray())
-                ->assertStatus(422);
+        $this->json('post', $thread->path().'/replies', $reply->toArray())
+            ->assertStatus(422);
 
     }
 
@@ -134,7 +134,7 @@ class ParticipateInForumTest extends TestCase
     public function users_may_only_reply_once_per_minute()
     {
 
-        $this->withoutExceptionHandling();
+        // $this->withoutExceptionHandling();
 
         $this->signedIn();
 
