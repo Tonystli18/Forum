@@ -7,11 +7,9 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class ThreadWasUpdated extends Notification
+class YouWereMentioned extends Notification
 {
     use Queueable;
-
-    protected $thread;
 
     protected $reply;
 
@@ -20,9 +18,8 @@ class ThreadWasUpdated extends Notification
      *
      * @return void
      */
-    public function __construct($thread, $reply)
+    public function __construct($reply)
     {
-        $this->thread = $thread;
         $this->reply = $reply;
     }
 
@@ -36,7 +33,6 @@ class ThreadWasUpdated extends Notification
     {
         return ['database'];
     }
-    
 
     /**
      * Get the mail representation of the notification.
@@ -61,7 +57,7 @@ class ThreadWasUpdated extends Notification
     public function toArray($notifiable)
     {
         return [
-            'message' => $this->reply->owner->name . 'replied to' . $this->thread->title,
+            'message' => $this->reply->owner->name . 'mentioned you in ' . $this->reply->thread->title,
             'link' => $this->reply->path()
         ];
     }

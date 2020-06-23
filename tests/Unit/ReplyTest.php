@@ -32,5 +32,28 @@ class ReplyTest extends TestCase
         $this->assertFalse($reply->wasJustPublished());
         
     }
+
+    /** @test */
+    public function it_can_detect_all_mentioned_users_in_the_body()
+    {
+        $reply = create('App\Reply', [
+            'body' => '@JaneDoe wants to talk to @JohnDoe'
+        ]);
+
+        $this->assertEquals(['JaneDoe', 'JohnDoe'], $reply->mentionedUsers());
+    }
+    
+    /** @test */
+    public function it_wraps_mentioned_names_in_the_body_withing_anchor_tags()
+    {
+        $reply = create('App\Reply', [
+            'body' => 'Hello @Jane-Doe, @John-Doe.'
+        ]);
+
+        $this->assertEquals(
+            'Hello <a href="/profiles/Jane-Doe">@Jane-Doe</a>, <a href="/profiles/John-Doe">@John-Doe</a>.',
+            $reply->body
+        );
+    }
     
 }

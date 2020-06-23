@@ -38,10 +38,10 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    // public function getRouteKeyName()
-    // {
-    //     return 'name';
-    // }
+    public function getRouteKeyName()
+    {
+        return 'name';
+    }
 
     public function threads()
     {

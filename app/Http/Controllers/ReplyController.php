@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CreatePostRequest;
+use App\User;
 use App\Reply;
 use App\Thread;
 use Illuminate\Support\Facades\Gate;
+use App\Notifications\YouWereMentioned;
+use App\Http\Requests\CreatePostRequest;
 
 class ReplyController extends Controller
 {
@@ -43,7 +45,7 @@ class ReplyController extends Controller
     public function store($channelId, Thread $thread, CreatePostRequest $form)
     {
         // Only response to ajax request
-       return $thread->addReply([
+        return $thread->addReply([
             'body' => request('body'),
             'user_id' => auth()->id()
         ])->load('owner');
@@ -81,18 +83,11 @@ class ReplyController extends Controller
     public function update(Reply $reply)
     {
         $this->authorize('update', $reply);
+        
+        request()->validate(['body' => 'required | spamfree']);
 
-        try {
-            request()->validate(['body' => 'required | spamfree']);
-
-            // $reply->update(['body' => request('body')]);
-            $reply->update(request(['body']));
-        } catch (\Exception $e) {
-            return response(
-                'Sorry, your reply could not be saved at this time.', 422
-            );
-        }
-
+        $reply->update(['body' => request('body')]);
+        // $reply->update(request(['body']));
     }
 
     /**

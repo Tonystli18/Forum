@@ -2250,6 +2250,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2281,6 +2286,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     update: function update() {
+      console.log(this.data.id);
       axios.patch("/replies/" + this.data.id, {
         body: this.body
       })["catch"](function (error) {
@@ -59973,7 +59979,7 @@ var render = function() {
       _c("div", { staticClass: "level" }, [
         _c("h6", { staticClass: "flex" }, [
           _c("a", {
-            attrs: { href: "/profiles/" + _vm.data.owner.id },
+            attrs: { href: "/profiles/" + _vm.data.owner.name },
             domProps: { textContent: _vm._s(_vm.data.owner.name) }
           }),
           _vm._v("\n        said "),
@@ -59989,52 +59995,66 @@ var render = function() {
     _c("div", { staticClass: "card-body" }, [
       _vm.editing
         ? _c("div", [
-            _c("div", { staticClass: "form-group" }, [
-              _c("textarea", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.body,
-                    expression: "body"
-                  }
-                ],
-                staticClass: "form-control",
-                domProps: { value: _vm.body },
+            _c(
+              "form",
+              {
                 on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
+                  submit: function($event) {
+                    $event.preventDefault()
+                    return _vm.update($event)
+                  }
+                }
+              },
+              [
+                _c("div", { staticClass: "form-group" }, [
+                  _c("textarea", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.body,
+                        expression: "body"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: { required: "" },
+                    domProps: { value: _vm.body },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.body = $event.target.value
+                      }
                     }
-                    _vm.body = $event.target.value
-                  }
-                }
-              })
-            ]),
-            _vm._v(" "),
-            _c(
-              "button",
-              {
-                staticClass: "btn-primary btn-xs mr-1",
-                on: { click: _vm.update }
-              },
-              [_vm._v("Update")]
-            ),
-            _vm._v(" "),
-            _c(
-              "button",
-              {
-                staticClass: "btn btn-link",
-                on: {
-                  click: function($event) {
-                    _vm.editing = false
-                  }
-                }
-              },
-              [_vm._v("Cancel")]
+                  })
+                ]),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn-primary btn-xs mr-1",
+                    attrs: { type: "submit" }
+                  },
+                  [_vm._v("Update")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-link",
+                    on: {
+                      click: function($event) {
+                        _vm.editing = false
+                      }
+                    }
+                  },
+                  [_vm._v("Cancel")]
+                )
+              ]
             )
           ])
-        : _c("div", { domProps: { textContent: _vm._s(_vm.body) } })
+        : _c("div", { domProps: { innerHTML: _vm._s(_vm.body) } })
     ]),
     _vm._v(" "),
     _vm.canUpdate
@@ -60128,16 +60148,20 @@ var render = function() {
           },
           _vm._l(_vm.notifications, function(notification, id) {
             return _c("li", { key: id }, [
-              _c("a", {
-                staticClass: "dropdown-item",
-                attrs: { href: notification.data.link },
-                domProps: { textContent: _vm._s(notification.data.message) },
-                on: {
-                  click: function($event) {
-                    return _vm.markAsRead(notification)
+              _c(
+                "a",
+                {
+                  staticClass: "dropdown-item",
+                  attrs: { href: notification.data.link },
+                  domProps: { textContent: _vm._s(notification.data.message) },
+                  on: {
+                    click: function($event) {
+                      return _vm.markAsRead(notification)
+                    }
                   }
-                }
-              })
+                },
+                [_vm._v(" " + _vm._s(notification.data.message))]
+              )
             ])
           }),
           0

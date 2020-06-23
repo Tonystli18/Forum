@@ -11,6 +11,10 @@ use Illuminate\Validation\Rules\Exists;
 
 class ThreadController extends Controller
 {
+    /*
+    *  Create a new ThreadController instance
+    */
+
     public function __construct()
     {
         $this->middleware('auth')->except(['index','show']);

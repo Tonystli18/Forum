@@ -11,7 +11,7 @@
         <a :href="notification.data.link" 
           class="dropdown-item" 
           v-text="notification.data.message"
-          @click="markAsRead(notification)"></a>
+          @click="markAsRead(notification)"> {{notification.data.message}}</a>
       </li>
     </ul>
   </li>

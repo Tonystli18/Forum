@@ -3,7 +3,7 @@
     <div class="card-header">
       <div class="level">
         <h6 class="flex">
-          <a :href="'/profiles/'+data.owner.id" v-text="data.owner.name"></a>
+          <a :href="'/profiles/'+data.owner.name" v-text="data.owner.name"></a>
           said <span v-text="ago"></span>
         </h6>
 
@@ -13,14 +13,19 @@
       </div>
     </div>
     <div class="card-body">
+
       <div v-if="editing">
-        <div class="form-group">
-          <textarea class="form-control" v-model="body"></textarea>
-        </div>
-        <button class="btn-primary btn-xs mr-1" @click="update">Update</button>
-        <button class="btn btn-link" @click="editing = false">Cancel</button>
+        <form v-on:submit.prevent="update" >
+          <div class="form-group">
+          <textarea class="form-control" v-model="body" required></textarea>
+          </div>
+
+          <button type="submit" class="btn-primary btn-xs mr-1">Update</button>
+          <button class="btn btn-link" @click="editing = false">Cancel</button>
+        </form>
       </div>
-      <div v-else v-text="body"></div>
+
+      <div v-else v-html="body"></div>
     </div>
 
     <div class="card-footer level" v-if="canUpdate">
@@ -62,6 +67,7 @@ export default {
 
   methods: {
     update() {
+      console.log(this.data.id);
       axios.patch(
         "/replies/" + this.data.id, {
         body: this.body

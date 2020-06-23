@@ -17,7 +17,7 @@ class ProfilesTest extends TestCase
         $this->withoutExceptionHandling();
 
         $user = create('App\User');
-        $this->get("/profiles/{$user->id}")
+        $this->get("/profiles/{$user->name}")
         // $this->get('/profiles/'. $user->name )
             ->assertSee($user->name);
     }
@@ -28,7 +28,7 @@ class ProfilesTest extends TestCase
 
         $thread = create('App\Thread');
         
-        $this->get('/profiles/'. auth()->user()->id )
+        $this->get('/profiles/'. auth()->user()->name )
             ->assertSee($thread->title)
             ->assertSee($thread->body);
     }

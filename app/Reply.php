@@ -2,9 +2,11 @@
 
 namespace App;
 
+use App\User;
+use Carbon\Carbon;
 use App\Traits\Favoritable;
 use App\Traits\RecordsActivity;
-use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 
 class Reply extends Model
@@ -52,5 +54,17 @@ class Reply extends Model
     public function path()
     {
         return $this->thread->path() . "#reply-{$this->id}";
+    }
+
+    public function mentionedUsers()
+    {
+        preg_match_all('/@([\w\-]+)/', $this->body, $matches);
+
+        return $matches[1];
+    }
+
+    public function setBodyAttribute($body)
+    {
+        $this->attributes['body'] = preg_replace('/@([\w\-]+)/', '<a href="/profiles/$1">$0</a>', $body);
     }
 }
