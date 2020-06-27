@@ -26,13 +26,13 @@ export default {
     },
 
     created() {
-      axios.get('/profiles/' + window.App.user.id + '/notifications')
+      axios.get('/profiles/' + window.App.user.name + '/notifications')
           .then(response => this.notifications = response.data);
     },
 
     methods: {
       markAsRead(notification) {
-          let path = '/profiles/' + window.App.user.id + '/notifications/' + notification.id;
+          let path = '/profiles/' + window.App.user.name + '/notifications/' + notification.id;
           axios.delete(path);
           location.reload();
       }

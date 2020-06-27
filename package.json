@@ -26,6 +26,7 @@
     "dependencies": {
         "bootstrap-icons": "^1.0.0-alpha4",
         "font-awesome": "^4.7.0",
-        "moment": "^2.26.0"
+        "moment": "^2.26.0",
+        "tributejs": "^5.1.3"
     }
 }
