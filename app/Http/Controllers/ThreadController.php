@@ -103,7 +103,12 @@ class ThreadController extends Controller
 
         $trending->push($thread);
 
-        $thread->visits()->record();
+        $thread->increment('visits');
+
+        /**
+         * record visits feature implemented base on Redis
+         */
+        // $thread->visits()->record();
 
         // return Thread::withCount('replies')->find(55);
         // return $thread->getRepliesCount();

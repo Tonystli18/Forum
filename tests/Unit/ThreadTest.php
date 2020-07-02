@@ -132,6 +132,7 @@ class ThreadTest extends TestCase
     }
 
     /** @test */
+    // For Redis implementation
     public function a_thread_records_each_visit()
     {
 
@@ -150,6 +151,5 @@ class ThreadTest extends TestCase
         $this->assertEquals(2, $thread->visits()->count());
 
     }
-    
     
 }

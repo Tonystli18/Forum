@@ -39,7 +39,10 @@
         </div>
 
         <div class="card-footer">
-            {{ $thread->visits()->count() }} Visits
+            {{-- The implementation based on Redis --}}
+            {{-- {{ $thread->visits()->count() }} Visits --}}
+
+            {{ $thread->visits }} Visits
         </div>
     </div>
 @empty
