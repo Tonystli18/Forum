@@ -5,9 +5,9 @@ namespace App\Http\Controllers;
 use App\User;
 use App\Thread;
 use App\Channel;
+use App\Trending;
 use Illuminate\Http\Request;
 use App\Filters\ThreadFilters;
-use Illuminate\Validation\Rules\Exists;
 
 class ThreadController extends Controller
 {
@@ -26,7 +26,7 @@ class ThreadController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Channel $channel, ThreadFilters $filters)
+    public function index(Channel $channel, ThreadFilters $filters, Trending $trending)
     {
 
         $threads = $this->getThreads($channel, $filters);
@@ -48,7 +48,10 @@ class ThreadController extends Controller
             return $threads;
         }
 
-        return view('threads.index', compact('threads'));
+        return view('threads.index', [
+            'threads' => $threads,
+            'trending' => $trending->get()
+        ]);
     }
 
     /**
@@ -92,11 +95,15 @@ class ThreadController extends Controller
      * @param  \App\Thread  $thread
      * @return \Illuminate\Http\Response
      */
-    public function show($channel, Thread $thread)
+    public function show($channel, Thread $thread, Trending $trending)
     {
         if(auth()->check()) {
             auth()->user()->read($thread);
-        }
+        };
+
+        $trending->push($thread);
+
+        $thread->visits()->record();
 
         // return Thread::withCount('replies')->find(55);
         // return $thread->getRepliesCount();

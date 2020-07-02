@@ -6,8 +6,10 @@ use App\Traits\Favoritable;
 use App\Filters\ThreadFilters;
 use App\Traits\RecordsActivity;
 use App\Events\ThreadHasNewReply;
+use Illuminate\Support\Facades\Redis;
 use App\Events\ThreadReceivedNewReply;
 use App\Notifications\ThreadWasUpdated;
+use App\Traits\RecordsVisits;
 use Illuminate\Database\Eloquent\Model;
 
 class Thread extends Model
@@ -129,4 +131,10 @@ class Thread extends Model
         $key = $user->visitedThreadCacheKey($this);
         return $this->updated_at > cache($key);
     }
+
+    public function visits()
+    {
+        return new Visits($this);
+    }
+
 }

@@ -15,6 +15,8 @@ use App\Http\Controllers\ThreadController;
 |
 */
 
+extension_loaded('redis');
+
 Route::get('/', function () {
     return view('welcome');
 });
