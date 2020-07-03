@@ -6,6 +6,7 @@ use App\User;
 use App\Thread;
 use App\Channel;
 use App\Trending;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Filters\ThreadFilters;
 
@@ -84,6 +85,10 @@ class ThreadController extends Controller
             'title' => request('title'),
             'body' => request('body')
         ]);
+
+        if(request()->wantsJson()) {
+            return response($thread, 201);
+        };
 
         return redirect($thread->path())
                 ->with('flash', 'Your thread has been published!');

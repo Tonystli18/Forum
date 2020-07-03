@@ -27,10 +27,10 @@ class ThreadTest extends TestCase
     /**
      * @test
      */
-    public function a_thread_can_make_a_string_path()
+    public function a_thread_has_a_path()
     {
         $thread = create('App\Thread');
-        $this->assertEquals("/threads/{$thread->channel->slug}/{$thread->id}", $thread->path());
+        $this->assertEquals("/threads/{$thread->channel->slug}/{$thread->slug}", $thread->path());
     }
 
     /**
@@ -79,7 +79,6 @@ class ThreadTest extends TestCase
 
         Notification::assertSentTo(auth()->user(), ThreadWasUpdated::class);
     }
-    
 
     /**
      * @test
@@ -132,24 +131,22 @@ class ThreadTest extends TestCase
     }
 
     /** @test */
-    // For Redis implementation
-    public function a_thread_records_each_visit()
-    {
+    // Base on Redis implementation
+    // public function a_thread_records_each_visit()
+    // {
 
-        $thread = make('App\Thread', ['id' => 1]);
+    //     $thread = make('App\Thread', ['id' => 1]);
 
-        $thread->visits()->reset();
+    //     $thread->visits()->reset();
 
-        $this->assertSame(0, $thread->visits()->count());
+    //     $this->assertSame(0, $thread->visits()->count());
 
-        $thread->visits()->record();
+    //     $thread->visits()->record();
 
-        $this->assertEquals(1, $thread->visits()->count());
+    //     $this->assertEquals(1, $thread->visits()->count());
 
-        $thread->visits()->record();
+    //     $thread->visits()->record();
 
-        $this->assertEquals(2, $thread->visits()->count());
-
-    }
-    
+    //     $this->assertEquals(2, $thread->visits()->count());
+    // }
 }

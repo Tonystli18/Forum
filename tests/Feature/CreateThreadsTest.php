@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Thread;
 use App\Activity;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -77,6 +78,38 @@ class CreateThreadsTest extends TestCase
         $this->publishThread(['channel_id' => 999])
             ->assertSessionHasErrors('channel_id');
     }
+
+    /** @test */
+    public function a_thread_requires_a_unique_slug()
+    {
+        $this->withoutExceptionHandling();
+
+        $this->signedIn();
+
+        $thread = create('App\Thread', ['title' => 'Foo Title']);
+
+        $this->assertEquals($thread->fresh()->slug, 'foo-title');
+
+        $thread = $this->postJson(route('threads'), $thread->toArray())->json();
+
+        $this->assertEquals("foo-title-{$thread['id']}", $thread['slug']);
+    }
+
+    /** @test */
+    public function a_thread_with_a_title_that_ends_in_a_number_should_generate_the_proper_slug()
+    {
+        $this->withoutExceptionHandling();
+
+        $this->signedIn();
+
+        $thread = create('App\Thread', ['title' => 'Some Title 24']);
+
+        $thread = $this->postJson(route('threads'), $thread->toArray())->json();
+
+        $this->assertEquals("some-title-24-{$thread['id']}", $thread['slug']);
+
+    }
+    
 
     /** @test */
     public function unauthorized_users_may_not_delete_threads()

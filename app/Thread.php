@@ -3,13 +3,14 @@
 namespace App;
 
 use App\Traits\Favoritable;
+use Illuminate\Support\Str;
+use App\Traits\RecordsVisits;
 use App\Filters\ThreadFilters;
 use App\Traits\RecordsActivity;
 use App\Events\ThreadHasNewReply;
 use Illuminate\Support\Facades\Redis;
 use App\Events\ThreadReceivedNewReply;
 use App\Notifications\ThreadWasUpdated;
-use App\Traits\RecordsVisits;
 use Illuminate\Database\Eloquent\Model;
 
 class Thread extends Model
@@ -28,7 +29,7 @@ class Thread extends Model
     {
         parent::boot();
 
-        // store replies count into Thread table, so below logics are not needed anymore
+        // Will store replies count into Thread table, so below logics are not needed anymore
         // static::addGlobalScope('replyCount', function($builder){
         //     $builder->withCount('replies');
         // });
@@ -48,11 +49,15 @@ class Thread extends Model
         // static::addGlobalScope('creator', function($builder){
         //     $builder->with('creator');
         // });
+        static::created(function ($thread) {
+            $thread->update(['slug' => $thread->title]);
+        });
+
     }
 
     public function path()
     {
-        return "/threads/{$this->channel->slug}/{$this->id}";
+        return "/threads/{$this->channel->slug}/{$this->slug}";
         // return '/threads/'. $this->channel->slug . '/'. $this->id;
     }
 
@@ -132,13 +137,42 @@ class Thread extends Model
         return $this->updated_at > cache($key);
     }
 
-
     //
     // implementation based on Redis
     //
     // public function visits()
     // {
     //     return new Visits($this);
+    // }
+
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
+
+    public function setSlugAttribute($value)
+    {
+        $slug = Str::slug($value);
+
+        while(static::whereSlug($slug)->exists()) {
+            $slug = "{$slug}-" . $this->id;
+        }
+
+        $this->attributes['slug'] = $slug;
+    }
+
+    // public function incrementSlug($slug, $count = 2)
+    // {
+        // $max = static::whereTitle($this->title)->latest('id')->value('slug');
+
+
+        // if(is_numeric($max[-1])) {
+        //     return preg_replace_callback('/(\d+)$/', function($matches) {
+        //         return $matches[1]+1;
+        //     }, $max);
+        // }
+
+        // return "{$slug}-2";
     // }
 
 }
