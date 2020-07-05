@@ -2157,11 +2157,6 @@ __webpack_require__.r(__webpack_exports__);
       body: ''
     };
   },
-  computed: {
-    signedIn: function signedIn() {
-      return window.App.signedIn;
-    }
-  },
   mounted: function mounted() {
     var tribute = new tributejs__WEBPACK_IMPORTED_MODULE_0___default.a({
       // column to search against in the object (accepts function or string)
@@ -2376,39 +2371,41 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['data'],
+  props: ['reply'],
   components: {
     Favorite: _Favorite_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
   data: function data() {
     return {
       editing: false,
-      id: this.data.id,
-      body: this.data.body
+      id: this.reply.id,
+      body: this.reply.body,
+      isBest: this.reply.isBest
     };
   },
   computed: {
     ago: function ago() {
-      return moment__WEBPACK_IMPORTED_MODULE_1___default()(this.data.created_at).fromNow() + '...';
-    },
-    signedIn: function signedIn() {
-      return window.App.signedIn;
-    },
-    canUpdate: function canUpdate() {
-      var _this = this;
-
-      return this.authorize(function (user) {
-        return _this.data.user_id == user.id;
-      }); //   return (this.data.user_id === window.App.user.id);
+      return moment__WEBPACK_IMPORTED_MODULE_1___default()(this.reply.created_at).fromNow() + '...';
     }
+  },
+  created: function created() {
+    var _this = this;
+
+    window.events.$on('best-reply-selected', function (id) {
+      _this.isBest = id === _this.id;
+    });
   },
   methods: {
     update: function update() {
-      console.log(this.data.id);
-      axios.patch("/replies/" + this.data.id, {
+      console.log(this.id);
+      axios.patch("/replies/" + this.id, {
         body: this.body
       })["catch"](function (error) {
         flash(error.response.data, 'danger');
@@ -2417,8 +2414,12 @@ __webpack_require__.r(__webpack_exports__);
       flash("Updated!");
     },
     destory: function destory() {
-      axios["delete"]("/replies/" + this.data.id);
-      this.$emit('deleted', this.data.id);
+      axios["delete"]("/replies/" + this.id);
+      this.$emit('deleted', this.id);
+    },
+    markBestReply: function markBestReply() {
+      axios.post('/replies/' + this.id + '/best');
+      window.events.$emit('best-reply-selected', this.id);
     }
   }
 });
@@ -60139,7 +60140,7 @@ var render = function() {
           { key: reply.id },
           [
             _c("reply", {
-              attrs: { data: reply },
+              attrs: { reply: reply },
               on: {
                 deleted: function($event) {
                   return _vm.remove(index)
@@ -60184,22 +60185,30 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "card", attrs: { id: "reply-" + _vm.id } }, [
-    _c("div", { staticClass: "card-header" }, [
-      _c("div", { staticClass: "level" }, [
-        _c("h6", { staticClass: "flex" }, [
-          _c("a", {
-            attrs: { href: "/profiles/" + _vm.data.owner.name },
-            domProps: { textContent: _vm._s(_vm.data.owner.name) }
-          }),
-          _vm._v("\n        said "),
-          _c("span", { domProps: { textContent: _vm._s(_vm.ago) } })
-        ]),
-        _vm._v(" "),
-        _vm.signedIn
-          ? _c("div", [_c("favorite", { attrs: { reply: _vm.data } })], 1)
-          : _vm._e()
-      ])
-    ]),
+    _c(
+      "div",
+      {
+        staticClass: "card-header",
+        class: _vm.isBest ? "text-light bg-success" : ""
+      },
+      [
+        _c("div", { staticClass: "level" }, [
+          _c("h6", { staticClass: "flex" }, [
+            _c("a", {
+              class: _vm.isBest ? "text-warning" : "",
+              attrs: { href: "/profiles/" + _vm.reply.owner.name },
+              domProps: { textContent: _vm._s(_vm.reply.owner.name) }
+            }),
+            _vm._v("\n        said "),
+            _c("span", { domProps: { textContent: _vm._s(_vm.ago) } })
+          ]),
+          _vm._v(" "),
+          _vm.signedIn
+            ? _c("div", [_c("favorite", { attrs: { reply: _vm.reply } })], 1)
+            : _vm._e()
+        ])
+      ]
+    ),
     _vm._v(" "),
     _c("div", { staticClass: "card-body" }, [
       _vm.editing
@@ -60266,29 +60275,44 @@ var render = function() {
         : _c("div", { domProps: { innerHTML: _vm._s(_vm.body) } })
     ]),
     _vm._v(" "),
-    _vm.canUpdate
+    _vm.authorize("owns", _vm.reply) || _vm.authorize("owns", _vm.reply.thread)
       ? _c("div", { staticClass: "card-footer level" }, [
-          _c(
-            "button",
-            {
-              staticClass: "btn-primary btn-sm mr-1",
-              on: {
-                click: function($event) {
-                  _vm.editing = true
-                }
-              }
-            },
-            [_vm._v("Edit")]
-          ),
+          _vm.authorize("owns", _vm.reply)
+            ? _c("div", [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn-primary btn-sm mr-1",
+                    on: {
+                      click: function($event) {
+                        _vm.editing = true
+                      }
+                    }
+                  },
+                  [_vm._v("Edit")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn-danger btn-sm mr-1",
+                    on: { click: _vm.destory }
+                  },
+                  [_vm._v("Delete")]
+                )
+              ])
+            : _vm._e(),
           _vm._v(" "),
-          _c(
-            "button",
-            {
-              staticClass: "btn-danger btn-sm mr-1",
-              on: { click: _vm.destory }
-            },
-            [_vm._v("Delete")]
-          )
+          _vm.authorize("owns", _vm.reply.thread)
+            ? _c(
+                "button",
+                {
+                  staticClass: "btn-primary btn-sm ml-a",
+                  on: { click: _vm.markBestReply }
+                },
+                [_vm._v("Best Reply?")]
+              )
+            : _vm._e()
         ])
       : _vm._e()
   ])
@@ -72576,11 +72600,30 @@ module.exports = function(module) {
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
 window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
+/**
+ * for front end Vue component authorization
+ */
 
-window.Vue.prototype.authorize = function (handler) {
-  var user = window.App.user;
-  return user ? handler(user) : false;
+var authorizations = __webpack_require__(/*! ./authorizations */ "./resources/js/authorizations.js");
+
+window.Vue.prototype.authorize = function () {
+  if (!window.App.signedIn) return false;
+
+  for (var _len = arguments.length, params = new Array(_len), _key = 0; _key < _len; _key++) {
+    params[_key] = arguments[_key];
+  }
+
+  if (typeof params[0] === 'string') {
+    return authorizations[params[0]](params[1]);
+  } // otherwise, first param is a callback
+
+
+  return params[0](window.App.user); //Callback only implementation
+  // let user = window.App.user;
+  // return user ? handler(user) : false;
 };
+
+Vue.prototype.signedIn = window.App.signedIn;
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -72590,7 +72633,6 @@ window.Vue.prototype.authorize = function (handler) {
  */
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
-
 
 Vue.component('flash', __webpack_require__(/*! ./components/Flash.vue */ "./resources/js/components/Flash.vue")["default"]);
 Vue.component('thread-view', __webpack_require__(/*! ./pages/Thread.vue */ "./resources/js/pages/Thread.vue")["default"]);
@@ -72615,6 +72657,23 @@ window.flash = function (message, level) {
 var app = new Vue({
   el: '#app'
 });
+
+/***/ }),
+
+/***/ "./resources/js/authorizations.js":
+/*!****************************************!*\
+  !*** ./resources/js/authorizations.js ***!
+  \****************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+var user = window.App.user;
+module.exports = {
+  owns: function owns(model) {
+    var prop = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'user_id';
+    return model[prop] === user.id;
+  }
+};
 
 /***/ }),
 

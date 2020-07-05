@@ -22,7 +22,18 @@ class CreateThreadsTable extends Migration
             $table->unsignedInteger('visits')->default(0);
             $table->string('title');
             $table->text('body');
+            $table->unsignedBigInteger('best_reply_id')->nullable();
             $table->timestamps();
+
+            /**
+             * It is the other way to implement the logic: deleting a best reply
+             * to update thread 'best_reply_id' field. This way is on database
+             * level.
+             */
+            $table->foreign('best_reply_id')
+                    ->references('id')
+                    ->on('replies')
+                    ->onDelete('set null');
         });
     }
 

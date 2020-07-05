@@ -27,6 +27,7 @@
         body { padding-bottom: 100px}
         .level {display: flex; align-items: center; }
         .flex {flex: 1;}
+        .ml-a {margin-left: auto;}
         [v-cloak] {display: none;}
     </style>
 </head>
