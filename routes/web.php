@@ -28,16 +28,14 @@ Route::get('/home', function() {
 })->name('home');
 
 Route::get('/threads', 'ThreadController@index')->name('threads');
-
 Route::get('/threads/create', 'ThreadController@create');
-
 Route::get('/threads/{channel}/{thread}', 'ThreadController@show');
-
 Route::delete('/threads/{channel}/{thread}', 'ThreadController@destroy');
-
 Route::post('/threads', 'ThreadController@store');
-
 Route::get('threads/{channel}', 'ThreadController@index');
+
+Route::post('/locked-threads/{thread}', 'LockedThreadController@store')->name('locked-threads.store')->middleware('admin');
+Route::delete('/locked-threads/{thread}', 'LockedThreadController@destroy')->name('locked-threads.destroy')->middleware('admin');
 
 // Route::resource('threads', 'ThreadController');
 

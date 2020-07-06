@@ -44,6 +44,10 @@ class ReplyController extends Controller
      */
     public function store($channelId, Thread $thread, CreatePostRequest $form)
     {
+        if($thread->locked) {
+            return response('Thread is locked', 422);
+        };
+        
         // Only response to ajax request
         return $thread->addReply([
             'body' => request('body'),
