@@ -89,16 +89,6 @@ class Thread extends Model
         return $reply;
     }
 
-    public function lock()
-    {
-        $this->update(['locked' => true]);
-    }
-
-    public function unLock()
-    {
-        $this->update(['locked' => false]);
-    }
-
     // public function notifySubscribers($reply)
     // {
     //     $this->subscriptions
@@ -192,6 +182,11 @@ class Thread extends Model
     public function markBestReply(Reply $reply)
     {
         $this->update(['best_reply_id' => $reply->id]);
+    }
+
+    public function lock()
+    {
+        $this->update(['locked' => true]);
     }
 
 }

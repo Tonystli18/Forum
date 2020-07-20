@@ -40,5 +40,6 @@ class AppServiceProvider extends ServiceProvider
         });
 
         Validator::extend('spamfree', 'App\Rules\SpamFree@passes');
+        Validator::extend('recaptcha', 'App\Rules\Recaptcha@passes');
     }
 }

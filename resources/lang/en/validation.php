@@ -118,6 +118,7 @@ return [
     'url' => 'The :attribute format is invalid.',
     'uuid' => 'The :attribute must be a valid UUID.',
     'spamfree'  => 'The :attribute contains spam.',
+    'recaptcha'  => 'The Recaptcha validation failed. Try again.',
 
     /*
     |--------------------------------------------------------------------------

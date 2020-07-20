@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\User;
 use App\Thread;
 use App\Channel;
 use App\Trending;
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Filters\ThreadFilters;
 
@@ -31,19 +29,6 @@ class ThreadController extends Controller
     {
 
         $threads = $this->getThreads($channel, $filters);
-
-        // if($channel->exists) {
-        //     $threads = $channel->threads()->latest();
-        // } else {
-        //     $threads = Thread::latest();
-        // }
-
-        // if($username = request('by')) {
-        //     $user = User::where('name', $username)->firstOrFail();
-        //     $threads = $threads->where('user_id', $user->id);
-        // }
-
-        // $threads = $threads->filter($filters)->get();
 
         if(request()->wantsJson()) {
             return $threads;
@@ -73,10 +58,11 @@ class ThreadController extends Controller
      */
     public function store(Request $request)
     {
-        request()->validate([
+        $request->validate([
             'title' => 'required | spamfree',
             'body' => 'required | spamfree',
-            'channel_id' => 'required|exists:channels,id'
+            'channel_id' => 'required|exists:channels,id',
+            'g-recaptcha-response' => 'recaptcha'
         ]);
 
         $thread = Thread::create([
@@ -86,7 +72,7 @@ class ThreadController extends Controller
             'body' => request('body')
         ]);
 
-        if(request()->wantsJson()) {
+        if($request->wantsJson()) {
             return response($thread, 201);
         };
 
@@ -146,7 +132,14 @@ class ThreadController extends Controller
      */
     public function update($channel, Thread $thread)
     {
-        //
+        $this->authorize('update', $thread);
+
+        $thread->update(request()->validate([
+            'title' => 'required | spamfree',
+            'body' => 'required | spamfree'
+        ]));
+
+        return $thread;
     }
 
     /**
@@ -161,15 +154,6 @@ class ThreadController extends Controller
         // $thread->replies()->delete();
 
         $this->authorize('update', $thread);
-
-        // if($thread->user_id != auth()->id()) {
-        //     abort(403, 'You do not have permission to do this');    
-        //     // if(request()->wantsJson()) {
-        //     //     return response(['status' => 'Permission Denied'], 403);
-        //     // }
-
-        //     // return redirect('/login');
-        // }
 
         $thread->delete();
 
@@ -194,8 +178,6 @@ class ThreadController extends Controller
         if ($channel->exists) {
             $threads->where('channel_id', $channel->id);
         }
-
-        // dd($threads->toSql());
 
         return $threads->paginate(25);
     }

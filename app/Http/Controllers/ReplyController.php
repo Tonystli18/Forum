@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\User;
 use App\Reply;
 use App\Thread;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use App\Notifications\YouWereMentioned;
 use App\Http\Requests\CreatePostRequest;
@@ -84,11 +85,11 @@ class ReplyController extends Controller
      * @param  \App\Reply  $reply
      * @return \Illuminate\Http\Response
      */
-    public function update(Reply $reply)
+    public function update(Request $request, Reply $reply)
     {
         $this->authorize('update', $reply);
         
-        request()->validate(['body' => 'required | spamfree']);
+        $request->validate(['body' => 'required | spamfree']);
 
         $reply->update(['body' => request('body')]);
         // $reply->update(request(['body']));
