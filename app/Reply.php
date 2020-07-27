@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use App\Traits\Favoritable;
 use App\Traits\RecordsActivity;
 use Illuminate\Support\Facades\DB;
+use Stevebauman\Purify\Facades\Purify;
 use Illuminate\Database\Eloquent\Model;
 
 class Reply extends Model
@@ -86,5 +87,10 @@ class Reply extends Model
     public function getIsBestAttribute()
     {
         return $this->isBest();
+    }
+
+    public function getBodyAttribute($body)
+    {
+        return Purify::clean($body);
     }
 }

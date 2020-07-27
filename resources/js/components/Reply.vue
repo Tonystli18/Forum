@@ -13,15 +13,15 @@
       </div>
     </div>
     <div class="card-body">
-
       <div v-if="editing">
         <form v-on:submit.prevent="update" >
           <div class="form-group">
-          <textarea class="form-control" v-model="body" required></textarea>
+            <wysiwyg v-model="body"></wysiwyg>
+          <!-- <textarea class="form-control" v-model="body" required></textarea> -->
           </div>
 
           <button type="submit" class="btn-primary btn-xs mr-1">Update</button>
-          <button class="btn btn-link" @click="editing = false">Cancel</button>
+          <button class="btn btn-link" @click="resetForm">Cancel</button>
         </form>
       </div>
 
@@ -95,6 +95,11 @@ export default {
     markBestReply() {
       axios.post('/replies/' + this.id + '/best');
       window.events.$emit('best-reply-selected', this.id);
+    },
+
+    resetForm() {
+      this.body = this.reply.body;
+      this.editing = false;
     }
   }
 };

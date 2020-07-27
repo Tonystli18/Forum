@@ -2,13 +2,18 @@
   <div>
         <div v-if="signedIn">
             <div class="form-group">
-            <textarea name="body" 
+                <wysiwyg name="body"
+                        id="body"
+                        v-model="body"
+                        placeholder="Have something to say?"
+                        :shouldClear="completed"></wysiwyg>
+            <!-- <textarea name="body" 
                         id="body" 
                         cols="100%" 
                         rows="5" 
                         placeholder="Have something to say?"
                         required
-                        v-model="body"></textarea>
+                        v-model="body"></textarea> -->
             </div>
             <button type="submit" class="btn-primary" @click="addReply">Post</button>
         </div>
@@ -27,7 +32,8 @@ import Tribute from "tributejs";
 export default {
     data() {
         return {
-            body: ''
+            body: '',
+            completed: false
         };
     },
 
@@ -56,6 +62,7 @@ export default {
                 })
                 .then(({data}) => {
                     this.body = '';
+                    this.completed = true;
 
                     flash('Your reply has been posted!');
 

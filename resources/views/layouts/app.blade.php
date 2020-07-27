@@ -21,6 +21,8 @@
 
     <!-- Fonts -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    {{-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.css@7.3.1/themes/algolia-min.css" integrity="sha256-HB49n/BZjuqiCtQQf49OdZn63XuKFaxcIHWf0HNKte8=" crossorigin="anonymous"> --}}
+
 
     <!-- Styles -->
     <style>
@@ -30,6 +32,7 @@
         .flex {flex: 1;}
         .ml-a {margin-left: auto;}
         [v-cloak] {display: none;}
+        pre {background: lightgray; border:thin; border-color:slategray}
     </style>
     @yield('head')
 </head>

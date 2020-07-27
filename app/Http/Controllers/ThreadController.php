@@ -38,6 +38,7 @@ class ThreadController extends Controller
             'threads' => $threads,
             'trending' => $trending->get()
         ]);
+        
     }
 
     /**

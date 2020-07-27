@@ -35,7 +35,7 @@
                     {{ session('status') }}
                 </div>
             @endif
-            <div class="body">{{ $thread->body }}</div>
+            <div class="body">{!! $thread->body !!}</div>
         </div>
 
         <div class="card-footer">

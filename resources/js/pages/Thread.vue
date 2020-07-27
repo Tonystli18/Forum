@@ -4,7 +4,7 @@ import SubscribeButton from '../components/SubscribeButton.vue';
 
 export default {
 
-props: ['thread'],
+    props: ['thread'],
     components: { Replies, SubscribeButton },
 
     data() {

@@ -5,6 +5,7 @@ namespace App;
 use App\Traits\Favoritable;
 use Illuminate\Support\Str;
 use App\Traits\RecordsVisits;
+use Laravel\Scout\Searchable;
 use App\Filters\ThreadFilters;
 use App\Traits\RecordsActivity;
 use App\Events\ThreadHasNewReply;
@@ -12,10 +13,11 @@ use Illuminate\Support\Facades\Redis;
 use App\Events\ThreadReceivedNewReply;
 use App\Notifications\ThreadWasUpdated;
 use Illuminate\Database\Eloquent\Model;
+use Stevebauman\Purify\Facades\Purify;
 
 class Thread extends Model
 {
-    use RecordsActivity;
+    use RecordsActivity, Searchable;
 
     // protected $fillable = ['title', 'body'];
 
@@ -187,6 +189,16 @@ class Thread extends Model
     public function lock()
     {
         $this->update(['locked' => true]);
+    }
+
+    public function toSearchableArray()
+    {
+        return $this->toArray() + ['path' => $this->path()];
+    }
+
+    public function getBodyAttribute($body)
+    {
+        return Purify::clean($body);
     }
 
 }

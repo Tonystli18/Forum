@@ -45,11 +45,13 @@ class CreateThreadsTest extends TestCase
      */
     public function an_authenticated_user_can_create_new_forum_threads()
     {
+        $this->withoutExceptionHandling();
+
         $response = $this->publishThread(['title' => 'Some Title', 'body' => 'Some body.']);
 
-        $this->get($response->headers->get('location'))
-            ->assertSeeText('Some Title')
-            ->assertSeeText('Some body.');
+        $this->get($response->headers->get('Location'))
+            ->assertSee('Some Title')
+            ->assertSee('Some body.');
     }
 
     /**
@@ -169,6 +171,6 @@ class CreateThreadsTest extends TestCase
 
         $thread = make('App\Thread', $overrides);
 
-        return $this->post('/threads', $thread->toArray()+ ['g-recaptcha-response' => 'token']);
+        return $this->post(route('threads'), $thread->toArray()+['g-recaptcha-response' => 'token']);
     }
 }

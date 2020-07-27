@@ -1,4 +1,4 @@
-// Fonts
+//Fonts
 @import url('https://fonts.googleapis.com/css?family=Nunito');
 
 // Variables
@@ -9,4 +9,10 @@
 @import '~font-awesome/scss/font-awesome.scss';
 
 // Tribute.js
-@import "../css/tribute.css"
+@import "../css/tribute.css";
+
+//algolia css
+@import '~instantsearch.css/themes/algolia-min.css';
+
+//Trix
+@import '~trix/dist/trix.css';

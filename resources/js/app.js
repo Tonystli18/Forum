@@ -32,6 +32,11 @@ window.Vue.prototype.authorize = function(...params) {
 
 Vue.prototype.signedIn = window.App.signedIn;
 
+// import VueInstantSearch from 'vue-instantsearch';
+// Vue.use(VueInstantSearch);
+
+import VueInstantSearch from 'vue-instantsearch';
+Vue.use(VueInstantSearch);
 
 /**
  * The following block of code may be used to automatically register your
@@ -49,6 +54,9 @@ Vue.component('thread-view', require('./pages/Thread.vue').default);
 Vue.component('paginator', require('./components/Paginator.vue').default);
 Vue.component('user-notifications', require('./components/UserNotifications.vue').default);
 Vue.component('avatar-form', require('./components/AvatarForm.vue').default);
+Vue.component('algolia-search', require('./components/AlgoliaSearch.vue').default);
+Vue.component('wysiwyg', require('./components/Wysiwyg.vue').default);
+
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
