@@ -7108,11 +7108,19 @@ module.exports = {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var algoliasearch_lite__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! algoliasearch/lite */ "./node_modules/algoliasearch/dist/algoliasearch-lite.umd.js");
 /* harmony import */ var algoliasearch_lite__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(algoliasearch_lite__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var instantsearch_js_es_lib_routers__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! instantsearch.js/es/lib/routers */ "./node_modules/instantsearch.js/es/lib/routers/index.js");
+/* harmony import */ var instantsearch_js_es_lib_stateMappings__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! instantsearch.js/es/lib/stateMappings */ "./node_modules/instantsearch.js/es/lib/stateMappings/index.js");
+
+
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      searchClient: algoliasearch_lite__WEBPACK_IMPORTED_MODULE_0___default()("ZOGEJ727NT", "948b3b7e7a656db5f5aef78bba621020")
+      searchClient: algoliasearch_lite__WEBPACK_IMPORTED_MODULE_0___default()("ZOGEJ727NT", "948b3b7e7a656db5f5aef78bba621020"),
+      routing: {
+        router: Object(instantsearch_js_es_lib_routers__WEBPACK_IMPORTED_MODULE_1__["history"])(),
+        stateMapping: Object(instantsearch_js_es_lib_stateMappings__WEBPACK_IMPORTED_MODULE_2__["singleIndex"])('threads')
+      }
     };
   }
 });
@@ -20206,6 +20214,42 @@ function () {
 
 /***/ }),
 
+/***/ "./node_modules/instantsearch.js/es/lib/routers/index.js":
+/*!***************************************************************!*\
+  !*** ./node_modules/instantsearch.js/es/lib/routers/index.js ***!
+  \***************************************************************/
+/*! exports provided: history */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _history__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./history */ "./node_modules/instantsearch.js/es/lib/routers/history.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "history", function() { return _history__WEBPACK_IMPORTED_MODULE_0__["default"]; });
+
+
+
+/***/ }),
+
+/***/ "./node_modules/instantsearch.js/es/lib/stateMappings/index.js":
+/*!*********************************************************************!*\
+  !*** ./node_modules/instantsearch.js/es/lib/stateMappings/index.js ***!
+  \*********************************************************************/
+/*! exports provided: simple, singleIndex */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _simple__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./simple */ "./node_modules/instantsearch.js/es/lib/stateMappings/simple.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "simple", function() { return _simple__WEBPACK_IMPORTED_MODULE_0__["default"]; });
+
+/* harmony import */ var _singleIndex__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./singleIndex */ "./node_modules/instantsearch.js/es/lib/stateMappings/singleIndex.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "singleIndex", function() { return _singleIndex__WEBPACK_IMPORTED_MODULE_1__["default"]; });
+
+
+
+
+/***/ }),
+
 /***/ "./node_modules/instantsearch.js/es/lib/stateMappings/simple.js":
 /*!**********************************************************************!*\
   !*** ./node_modules/instantsearch.js/es/lib/stateMappings/simple.js ***!
@@ -20248,6 +20292,43 @@ function simpleStateMapping() {
       return Object.keys(routeState).reduce(function (state, indexId) {
         return _objectSpread({}, state, _defineProperty({}, indexId, getIndexStateWithoutConfigure(routeState[indexId])));
       }, {});
+    }
+  };
+}
+
+/***/ }),
+
+/***/ "./node_modules/instantsearch.js/es/lib/stateMappings/singleIndex.js":
+/*!***************************************************************************!*\
+  !*** ./node_modules/instantsearch.js/es/lib/stateMappings/singleIndex.js ***!
+  \***************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return singleIndexStateMapping; });
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
+
+function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
+
+function getIndexStateWithoutConfigure(uiState) {
+  var configure = uiState.configure,
+      trackedUiState = _objectWithoutProperties(uiState, ["configure"]);
+
+  return trackedUiState;
+}
+
+function singleIndexStateMapping(indexName) {
+  return {
+    stateToRoute: function stateToRoute(uiState) {
+      return getIndexStateWithoutConfigure(uiState[indexName] || {});
+    },
+    routeToState: function routeToState() {
+      var routeState = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+      return _defineProperty({}, indexName, getIndexStateWithoutConfigure(routeState));
     }
   };
 }

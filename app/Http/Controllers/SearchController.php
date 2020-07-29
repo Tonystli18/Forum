@@ -10,7 +10,9 @@ class SearchController extends Controller
 {
     public function show(Trending $trending)
     {
-        $threads = Thread::search(request('q'))->paginate(25);
+        $threads = Thread::search(request('query'))->paginate(25);
+
+        dd($threads);
 
         if(request()->expectsJson()) {
             return $threads;

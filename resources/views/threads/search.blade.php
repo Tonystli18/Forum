@@ -6,8 +6,8 @@
         <ais-instant-search
         :search-client="searchClient"
         index-name="threads"
+        :routing="routing"
         >
-        <ais-configure query="{{request('q')}}"></ais-configure>
             <div class="row justify-content-center">
                 <div class="col-md-8">
                     <ais-hits>
@@ -36,6 +36,7 @@
                             Search
                         </div>
                         <div class="card-body">
+                        <ais-configure query="{{request('query')}}"></ais-configure>
                         <ais-search-box placeholder="Search threads...">
                         </ais-search-box>
                         </div>
