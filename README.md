@@ -1,8 +1,8 @@
 # About This Project
 
-This is a demo project that create a Forum with Laravel, Vue.js and TDD methedology. Originally, it was created by Jeffry Way in his laracasts lessons [Let's Build A Forum with Laravel and TDD](https://laracasts.com/series/lets-build-a-forum-with-laravel).   
-But if you follow his instructions through the lesson videos, many pieces won't work if you use the latest version of laravel(7.x) or some modules.   
-This project was created base on Jeffry's work, but did all necessary changes to make it work with new version of laravel and related modules.
+This is a demo project that created by following Jeffry Way's laracasts lessons [Let's Build A Forum with Laravel and TDD](https://laracasts.com/series/lets-build-a-forum-with-laravel). It uses Laravel, Vue.js and TDD methedology.    
+However, if you go through all his 102 episodes, there will be so many places you got stuck, because it was based on Laravel 5.5 and some old version 3rd party modules.   
+This project was built on new Laravel 7 and latest version of 3rd party modules like Vue.js, Algolia, Trix etc. Please check *composer.json* and *package.json* files under root directory of this project. 
 
 ## My Development Environment/Tools
 - **OS**: Windows 10
@@ -11,7 +11,7 @@ This project was created base on Jeffry's work, but did all necessary changes to
 - **Editor**: Visual Studio Code v1.42.0
 - **Programming language**: [PHP v7.4.0](https://www.php.net/downloads.php)
 - **[Wampserver64 v3.2.0](http://www.wampserver.com/en/download-wampserver-64bits/)**. My computer is a HP laptop running Windows 10, so I choose Wampserver which can easily install Apache, MySQL, and start/stop them. To make this project run, you need to create a virtual host for *c:/wamp64/www/forum/public*
-- **[Laravel Framework v6.15.1](https://laravel.com/docs/6.x)**. 
+- **[Laravel Framework v7.15.0](https://laravel.com/docs/6.x)**. 
 To install Laravel, you need to install [Composer](https://getcomposer.org/download/)(v1.9.3) first. Then run below command:
 ```
     > composer global require laravel/installer
@@ -24,4 +24,4 @@ To install Laravel, you need to install [Composer](https://getcomposer.org/downl
 1. Since git won't add *node_modules* and *vendors* folders into repository, after you clone this project, you need to run **npm install** to install *node_modules* and **composer install** to install *vendor* dependencies. 
 2. The *.env* file is also not included in this repository. You can change *.env.example* to *.env* and make necessary changes according to the environment in your computer.  
 
-GOOD LUCK!
+Have fun!
